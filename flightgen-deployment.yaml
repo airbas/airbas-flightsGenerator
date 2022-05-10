@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: flightgen
+  name: flightgen
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: flightgen
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.service: flightgen
+    spec:
+      containers:
+        - env:
+          - name: flightgen
+          image: ffiodicedev/flightgen:latest
+          name: flightgen
+          ports:
+            - containerPort: 5000
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: flightgen
+  name: flightgen
+spec:
+  ports:
+    - port: 5000
+      targetPort: 5000
+  selector:
+    io.kompose.service: flightgen
+  type: ClusterIP
